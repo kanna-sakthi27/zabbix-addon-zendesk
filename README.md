@@ -1,1 +1,1 @@
-# zabbix-addon-zendesk
+# zabbix-addons

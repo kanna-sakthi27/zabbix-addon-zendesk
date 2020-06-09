@@ -1,0 +1,8 @@
+{
+  "ticket": {
+    "status": "new",
+    "subject":  Test
+    "comment":  { "body": "POD is BRF" },
+    "priority": "normal"
+  }
+}
