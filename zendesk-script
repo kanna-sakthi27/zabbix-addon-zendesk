@@ -23,7 +23,6 @@ zabbixurl=http://172.16.1.64/zabbix/api_jsonrpc.php
 zendomain=ncshelpdesk
 cd "$(dirname "$0")"
 apitoken=$(cat zabbix_api_token)
-echo started > /tmp/startticket
 
 for t in ${triggerid[@]};
 do
@@ -35,19 +34,18 @@ triggerstatus=$(curl -s -X POST -H 'Content-Type: application/json-rpc' -d '{"js
 trigername=$(curl -s -X POST -H 'Content-Type: application/json-rpc' -d '{"jsonrpc":"2.0","method":"event.get","id":1,"auth":"'$apitoken'", "params":{"objectids": '$t', "output": "extend"}}'  $zabbixurl | jq '.'  |grep -i name |head -n1 |cut -c15-)
 eventtime=$(curl -s -X POST -H 'Content-Type: application/json-rpc' -d '{"jsonrpc":"2.0","method":"problem.get","id":1,"auth":"'$apitoken'", "params":{"output": "extend", "objectids": '$t' }}'  $zabbixurl | jq '.' |grep -i clock|head -n1| cut -c 17-26)
 #eventtimeinlinux=$(date -d '@$eventtime')
+
 ###Need to change the event id after sometime
 eventid=$(curl -s -X POST -H 'Content-Type: application/json-rpc' -d '{"jsonrpc":"2.0","method":"problem.get","id":1,"auth":"'$apitoken'", "params":{"output": "extend", "objectids": '$t' }}'  $zabbixurl | jq '.' |grep -i eventid|head -n1| cut -c 19-25)
 echo $eventid:$t >> /tmp/zabbix_event_id
 checkeventid=$(grep -i $eventid:$t /tmp/zabbix_event_id |tail -n 1 )
 
 echo $trigername > output
-#newitrigger=$(cat output)
-
 
 sed -i  's/Test/'"$trigername"'/g' create_ticket.txt
 
 
-echo $triggerstatus >> triggerid
+#echo $triggerstatus >> triggerid
 ##Create Ticket
 
 if  [ "$triggerstatus" == 1 ]  &&  [ ! -z "$checkeventid" ]  ;
@@ -75,7 +73,7 @@ newticketid=$(cat /tmp/zabbix_zen_id |grep -i $t| cut -c 1-3 |tail -n 1 )
 curl https://$zendomain.zendesk.com/api/v2/tickets/$newticketid.json   -H "Content-Type: application/json" -d '{"ticket": {"status": "solved", "comment": { "body": "Issue solved." }}}' -v -u $zenapi -X PUT
 
 sed -i  '/'$newticketid':'$t'/d' /tmp/zabbix_zen_id
-  # sed -i  '/'$eventid'/d'  /tmp/zabbix_event_id
+# sed -i  '/'$eventid'/d'  /tmp/zabbix_event_id
 
 
 #echo close;
