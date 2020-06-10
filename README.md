@@ -2,6 +2,7 @@
 This code was writen to create/update/close tickets in zendesk on based on mentioned trigger IDs
 
 ## Requirments
+1. Zabbix 4.0+, but should be working with lesser version also
 1. jq installed on zabbix server
 2. Listed down the triger IDs
 3. Zendesk API token/ Zabbix creds

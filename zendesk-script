@@ -17,10 +17,11 @@
 #--------------------------------------------------------------------------- #
 
 
-zenapi="sakthi@nimbus.my/token:5OoX9Xyob7VfKblZINQSBYbuGZEtpUNQFYGHxUPB"
-triggerid=(13491 17018)
-zabbixurl=http://172.16.1.64/zabbix/api_jsonrpc.php
-zendomain=ncshelpdesk
+zenapi="useremail/token:apitoken"
+triggerid=(### ### ### ###)
+zabbixurl=http://IP_OF_ZABBIX/zabbix/api_jsonrpc.php
+zendomain=(subdomin for zendesk)
+
 cd "$(dirname "$0")"
 apitoken=$(cat zabbix_api_token)
 
